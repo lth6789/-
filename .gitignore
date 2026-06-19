@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.npm-cache/
+.vite/
+
+# Local source videos kept on this machine only.
+public/hero-bg.mp4
+public/ai-short-film.mp4
+public/ai-short-film-02.mp4
+public/ai-short-film-04.mp4
+public/ai-short-film-05.mp4
+public/ai-short-film-featured.mp4
+public/ai-short-film-red-blue-warrior.mp4
+public/virtual-commerce-video-01.mp4
+public/virtual-commerce-video-02.mp4
+public/virtual-commerce-video-03.mp4
+public/virtual-commerce-video-04.mp4
+
+*.log

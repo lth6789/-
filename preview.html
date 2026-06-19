@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>廖廷晖 | AI Designer Portfolio Preview</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/components/BorderGlow.css" />
+  </head>
+  <body>
+    <section class="hero section-screen" id="top">
+      <video class="hero-video" data-src="./public/hero-bg-preview.mp4" autoplay muted loop playsinline preload="none" aria-hidden="true"></video>
+      <div class="motion-backdrop" aria-hidden="true">
+        <div class="scanline"></div>
+        <div class="mesh mesh-a"></div>
+        <div class="mesh mesh-b"></div>
+        <div class="mesh mesh-c"></div>
+        <div class="grid-plane"></div>
+        <div class="noise"></div>
+      </div>
+      <header class="nav" id="siteNav">
+        <a class="brand" href="#top"><span>LT</span><strong>廖廷晖</strong></a>
+        <nav>
+          <a href="#about">Profile</a>
+          <a href="#projects">Works</a>
+          <a href="#strengths">Ability</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a class="nav-contact" href="tel:13318993217">Call</a>
+      </header>
+
+      <div class="hero-stage container">
+        <div class="hero-panel">
+          <div class="hero-copy">
+            <div class="hero-kicker">Creative AI Designer</div>
+            <h1>Empowering Visual Stories</h1>
+            <p>视觉设计师 / AI设计师 / 品牌设计师。以美术基础为底，用AI影像、角色设定与短视频叙事，构建更有记忆点的视觉内容。</p>
+            <div class="hero-actions">
+              <a class="primary" href="#projects">查看作品</a>
+              <a class="secondary" href="#contact">联系合作</a>
+            </div>
+          </div>
+
+          <div class="hero-title" aria-hidden="true">
+            <span>AI VISUAL</span>
+            <strong>DESIGNER</strong>
+          </div>
+
+          <div class="hero-hud hero-hud-left">
+            <span>001</span>
+            <i></i>
+            <small>AI image creation / character visual / short video narrative</small>
+          </div>
+
+          <aside class="hero-index">
+            <span class="index-label">Design to explore</span>
+            <a href="#projects">AI影像创作</a>
+            <a href="#projects">角色视觉设定</a>
+            <a href="#projects">品牌内容包装</a>
+            <span class="index-label">Portfolio</span>
+            <a href="#strengths">2 AI short films</a>
+            <a href="#strengths">1000+ followers</a>
+          </aside>
+
+          <div class="hero-miniworks">
+            <article>
+              <span>2026</span>
+              <strong>AI Manju</strong>
+              <small>story / character / edit</small>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class="hero-side"><span>PORTFOLIO 2026</span><span>AI DESIGNER</span></div>
+    </section>
+    <div class="work-preview" id="workPreview" role="dialog" aria-modal="true" aria-label="作品预览" hidden>
+      <button class="work-preview-backdrop" type="button" aria-label="关闭预览"></button>
+      <div class="work-preview-panel">
+        <div class="work-preview-head">
+          <div>
+            <strong id="workPreviewTitle"></strong>
+            <span id="workPreviewNote"></span>
+          </div>
+          <button class="work-preview-close" type="button" aria-label="关闭预览">×</button>
+        </div>
+        <div class="work-preview-stage" id="workPreviewStage"></div>
+      </div>
+    </div>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/ScrollTrigger.min.js"></script>
+    <script>
+      const siteNav = document.getElementById('siteNav');
+      let navTicking = false;
+      const updateNav = () => {
+        navTicking = false;
+        siteNav.classList.toggle('nav-scrolled', window.scrollY > window.innerHeight * 0.72);
+      };
+      const onNavScroll = () => {
+        if (navTicking) return;
+        navTicking = true;
+        window.requestAnimationFrame(updateNav);
+      };
+      updateNav();
+      window.addEventListener('scroll', onNavScroll, { passive: true });
+      window.addEventListener('DOMContentLoaded', () => {
+      const heroVideo = document.querySelector('.hero-video[data-src]');
+      if (heroVideo) {
+        window.setTimeout(() => {
+          if (!heroVideo.getAttribute('src')) {
+            heroVideo.setAttribute('src', heroVideo.dataset.src);
+            heroVideo.load();
+            const playPromise = heroVideo.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+              playPromise.catch(() => {});
+            }
+          }
+        }, 450);
+      }
+      const preview = document.getElementById('workPreview');
+      const previewTitle = document.getElementById('workPreviewTitle');
+      const previewNote = document.getElementById('workPreviewNote');
+      const previewStage = document.getElementById('workPreviewStage');
+      const closePreview = () => {
+        preview.hidden = true;
+        document.body.classList.remove('preview-lock');
+        previewStage.innerHTML = '';
+      };
+      const openPreview = (item) => {
+        const url = item.getAttribute('href');
+        const title = item.querySelector('b')?.textContent || '作品预览';
+        const note = item.querySelector('small')?.textContent || '';
+        const isVideo = /\.(mp4|webm|mov)$/i.test(url);
+        previewTitle.textContent = title;
+        previewNote.textContent = note;
+        previewStage.innerHTML = '';
+        const media = document.createElement(isVideo ? 'video' : 'img');
+        media.src = url;
+        if (isVideo) {
+          media.controls = true;
+          media.autoplay = true;
+          media.playsInline = true;
+        } else {
+          media.alt = title;
+        }
+        previewStage.appendChild(media);
+        preview.hidden = false;
+        document.body.classList.add('preview-lock');
+      };
+      const storyboardOrder = [
+        './public/storyboard-character.png',
+        './public/storyboard-enemy.png',
+        './public/storyboard-environment.png',
+        './public/storyboard-energy-warrior-purple.png',
+        './public/storyboard-shadow-swordswoman.png',
+        './public/storyboard-purple-energy-body.png',
+        './public/storyboard-cyber-scene-01.png',
+        './public/storyboard-cyber-scene-02.png',
+        './public/storyboard-cyber-scene-03.png',
+        './public/storyboard-purple-energy-visual.png',
+      ];
+      const storyboardList = Array.from(document.querySelectorAll('.project-file-list.is-gallery'))
+        .find((list) => list.querySelector('a[href="./public/storyboard-character.png"]'));
+      if (storyboardList) {
+        const items = Array.from(storyboardList.querySelectorAll('.project-file-item'));
+        const itemByHref = new Map(items.map((item) => [item.getAttribute('href'), item]));
+        storyboardOrder.forEach((href) => {
+          const item = itemByHref.get(href);
+          if (item) storyboardList.appendChild(item);
+        });
+        items.forEach((item) => {
+          if (!storyboardOrder.includes(item.getAttribute('href'))) {
+            storyboardList.appendChild(item);
+          }
+        });
+        Array.from(storyboardList.querySelectorAll('.project-file-item > span')).forEach((label, index) => {
+          label.textContent = String(index + 1).padStart(2, '0');
+        });
+      }
+      document.querySelectorAll('.project-file-item').forEach((item) => {
+        item.addEventListener('click', (event) => {
+          event.preventDefault();
+          openPreview(item);
+        });
+      });
+      preview.querySelector('.work-preview-backdrop').addEventListener('click', closePreview);
+      preview.querySelector('.work-preview-close').addEventListener('click', closePreview);
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !preview.hidden) {
+          closePreview();
+        }
+      });
+      const initPortfolioMotion = () => {
+        if (!window.gsap || !window.ScrollTrigger) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        const splitText = (element) => {
+          if (!element || element.dataset.splitReady === 'true') return [];
+          const text = element.textContent;
+          element.textContent = '';
+          element.dataset.splitReady = 'true';
+          return Array.from(text).map((char) => {
+            const span = document.createElement('span');
+            span.className = 'char-reveal';
+            span.textContent = char === ' ' ? '\u00a0' : char;
+            element.appendChild(span);
+            return span;
+          });
+        };
+
+        gsap.set('.hero-panel', { clipPath: 'inset(12% 12% 12% 12% round 34px)' });
+        gsap.set('.hero-video', { scale: 1.12, filter: 'brightness(0.72) contrast(1.08)' });
+        gsap.set('.nav', { y: -34, autoAlpha: 0 });
+        gsap.set('.hero-kicker, .hero-copy p, .hero-actions, .hero-index, .hero-hud-left, .hero-miniworks, .hero-side', {
+          y: 34,
+          autoAlpha: 0,
+        });
+        gsap.set('.hero-title span, .hero-title strong', {
+          yPercent: 120,
+          scaleY: 0.58,
+          transformOrigin: '50% 100%',
+        });
+
+        const chars = splitText(document.querySelector('.hero-copy h1'));
+        gsap.set(chars, { yPercent: 120, scaleY: 0.42, autoAlpha: 0, transformOrigin: '50% 100%' });
+
+        gsap.timeline({ defaults: { ease: 'expo.out' } })
+          .to('.hero-panel', { clipPath: 'inset(0% 0% 0% 0% round 34px)', duration: 1.55 })
+          .to('.hero-video', { scale: 1, filter: 'brightness(0.88) contrast(1.04)', duration: 2.2 }, '<')
+          .to('.nav', { y: 0, autoAlpha: 1, duration: 1.1 }, '-=1.2')
+          .to(chars, { yPercent: 0, scaleY: 1, autoAlpha: 1, duration: 1.25, stagger: 0.018 }, '-=0.86')
+          .to('.hero-title span, .hero-title strong', { yPercent: 0, scaleY: 1, duration: 1.45, stagger: 0.12 }, '-=1.1')
+          .to('.hero-kicker, .hero-copy p, .hero-actions, .hero-index, .hero-hud-left, .hero-miniworks, .hero-side', {
+            y: 0,
+            autoAlpha: 1,
+            duration: 1.15,
+            stagger: 0.075,
+          }, '-=0.95');
+
+        gsap.utils.toArray('section:not(.hero)').forEach((section) => {
+          const label = section.querySelector('.section-label');
+          const heading = section.querySelector('h2');
+          const intro = section.querySelector('.section-head p, .about-copy > p, .contact-inner p');
+          const cards = section.querySelectorAll('.border-glow-card, .project-card, .strength-card, .contact-panel');
+          const media = section.querySelectorAll('.project-media-frame, .portrait, .project-file-shelf');
+          const textItems = [label, heading, intro].filter(Boolean);
+
+          gsap.set(textItems, { autoAlpha: 0, y: 80 });
+          if (heading) {
+            gsap.set(heading, { scaleX: 1.18, transformOrigin: '0% 50%', clipPath: 'inset(0 100% 0 0)' });
+          }
+          gsap.set(cards, { autoAlpha: 0, y: 96, scale: 0.96, clipPath: 'inset(18% 0 18% 0 round 20px)' });
+          gsap.set(media, { clipPath: 'inset(0 0 100% 0 round 18px)' });
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 72%',
+              end: 'bottom 20%',
+              once: true,
+            },
+            defaults: { ease: 'power4.out' },
+          });
+          tl.to(label, { autoAlpha: 1, y: 0, duration: 0.9 })
+            .to(heading, { autoAlpha: 1, y: 0, scaleX: 1, clipPath: 'inset(0 0% 0 0)', duration: 1.25 }, '-=0.58');
+          if (intro) {
+            tl.to(intro, { autoAlpha: 1, y: 0, duration: 0.9 }, '-=0.66');
+          }
+          tl.to(media, { clipPath: 'inset(0 0 0% 0 round 18px)', duration: 1.12, stagger: 0.08 }, '-=0.58')
+            .to(cards, { autoAlpha: 1, y: 0, scale: 1, clipPath: 'inset(0% 0 0% 0 round 20px)', duration: 1.1, stagger: 0.11 }, '-=0.9');
+        });
+
+        gsap.utils.toArray('.project-media-frame img, .project-media-frame video, .portrait img').forEach((item) => {
+          gsap.to(item, {
+            yPercent: -8,
+            scale: 1.05,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: item,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          });
+        });
+        ScrollTrigger.refresh();
+      };
+      initPortfolioMotion();
+      });
+    </script>
+
+    <section class="about section-pad" id="about">
+      <div class="container about-grid">
+        <div class="border-glow-card about-border-glow">
+          <span class="edge-light" aria-hidden="true"></span>
+          <div class="border-glow-inner portrait-card">
+            <div class="portrait">
+              <img src="./public/portrait.jpg" alt="廖廷晖个人肖像" />
+              <div class="portrait-glow"></div>
+            </div>
+            <div class="portrait-meta"><strong>廖廷晖</strong><span>三峡大学 · 美术 / 环境设计</span></div>
+          </div>
+        </div>
+        <div class="about-copy">
+          <div class="section-label">PROFILE</div>
+          <h2>视觉设计师，也是正在把AI内容做成作品的人。</h2>
+          <p>我具备美术专业背景，关注造型、构图、色彩与视觉叙事，也持续实践AI影像、AI漫剧与虚拟人物内容。相比单纯完成画面，我更关注故事、角色、画面和传播效果如何共同成立。</p>
+          <p>目前希望进入AI内容、动画影像、新媒体视觉或虚拟人相关团队，参与AI短剧、AI广告、角色视觉、分镜设计、内容运营等真实项目。</p>
+          <div class="contact-strip">
+            <span>13318993217</span>
+            <span>湖北 / 三峡大学</span>
+          </div>
+          <div class="border-glow-card about-border-glow about-border-glow-stats">
+            <span class="edge-light" aria-hidden="true"></span>
+            <div class="border-glow-inner stats">
+              <div class="stat"><strong>1000+</strong><span>抖音账号累计粉丝</span></div>
+              <div class="stat"><strong>3</strong><span>核心项目经历</span></div>
+              <div class="stat"><strong>2027</strong><span>三峡大学本科在读</span></div>
+            </div>
+          </div>
+          <div class="profile-notes">
+            <div class="border-glow-card about-border-glow">
+              <span class="edge-light" aria-hidden="true"></span>
+              <div class="border-glow-inner profile-note-card"><span>Focus</span><strong>AI影像 / 角色视觉 / 品牌内容</strong></div>
+            </div>
+            <div class="border-glow-card about-border-glow">
+              <span class="edge-light" aria-hidden="true"></span>
+              <div class="border-glow-inner profile-note-card"><span>Tools</span><strong>ChatGPT · Codex · Midjourney · 即梦 · 可灵 · AE · 剪映</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects section-pad" id="projects">
+      <div class="container">
+        <div class="section-head">
+          <div><div class="section-label">SELECTED WORKS</div><h2>精选项目</h2></div>
+          <p>先以作品方向和视觉占位呈现，后续可替换成真实视频封面、分镜图、角色设定与平台数据截图。</p>
+        </div>
+        <div class="project-list">
+          <div class="border-glow-card site-border-glow project-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner project-card">
+            <div class="project-visual cyan has-media">
+              <div class="project-media-browser">
+                <div class="project-media-frame">
+                  <video class="project-video" src="./public/ai-short-film-red-blue-warrior-preview.mp4" controls muted playsinline preload="none"></video>
+                  <span>红蓝战士</span>
+                </div>
+                <div class="project-file-shelf" aria-label="作品栏">
+                  <button class="project-shelf-toggle" type="button">
+                    <strong>作品栏</strong>
+                    <span>6 个文件</span>
+                    <b>展开</b>
+                  </button>
+                  <div class="project-file-list" hidden>
+                    <a class="project-file-item" href="./public/ai-short-film-red-blue-warrior-preview.mp4" target="_blank" rel="noreferrer">
+                      <span>01</span>
+                      <div>
+                        <b>红蓝战士</b>
+                        <small>AI动画短片 / 主展示视频</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item" href="./public/ai-short-film-featured-preview.mp4" target="_blank" rel="noreferrer">
+                      <span>02</span>
+                      <div>
+                        <b>人物脸部特写</b>
+                        <small>AI动画短片 / 视频文件</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item" href="./public/ai-short-film-preview.mp4" target="_blank" rel="noreferrer">
+                      <span>03</span>
+                      <div>
+                        <b>皮影判官</b>
+                        <small>AI动画短片 / 视频文件</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item" href="./public/ai-short-film-02-preview.mp4" target="_blank" rel="noreferrer">
+                      <span>04</span>
+                      <div>
+                        <b>战斗场面练习</b>
+                        <small>AI动画短片 / 动作场面练习</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item" href="./public/ai-short-film-04-preview.mp4" target="_blank" rel="noreferrer">
+                      <span>05</span>
+                      <div>
+                        <b>从屈辱到崛起</b>
+                        <small>AI动画短片 / 视频文件</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item" href="./public/ai-short-film-05-preview.mp4" target="_blank" rel="noreferrer">
+                      <span>06</span>
+                      <div>
+                        <b>交叉路口</b>
+                        <small>AI动画短片 / 视频文件</small>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-copy"><span>AI MANJU</span><h3>AI动画短片</h3><p class="meta">个人创作</p><p>围绕都市情绪叙事、人物关系与电影化视觉表达，完成故事概念、角色设定、分镜规划、AI画面生成、后期剪辑与发布。</p><a href="#contact">继续了解</a></div>
+          </div></div>
+          <div class="border-glow-card site-border-glow project-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner project-card">
+            <div class="project-visual lime has-media">
+              <div class="project-media-browser">
+                <div class="project-media-frame">
+                  <img class="project-image" src="./public/virtual-commerce-01.jpg" alt="商品橱窗账号数据" />
+                  <span>商品橱窗账号数据</span>
+                </div>
+                <div class="project-file-shelf" aria-label="作品栏">
+                  <button class="project-shelf-toggle" type="button">
+                    <strong>作品栏</strong>
+                    <span>15 个文件</span>
+                    <b>展开</b>
+                  </button>
+                  <div class="project-file-list is-gallery" hidden>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-01.jpg" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-01.jpg" alt="商品橱窗账号数据" loading="lazy" />
+                      <span>01</span>
+                      <div>
+                        <b>商品橱窗账号数据</b>
+                        <small>虚拟人物带货 / 账号运营</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-02.jpg" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-02.jpg" alt="账号主页与内容矩阵" loading="lazy" />
+                      <span>02</span>
+                      <div>
+                        <b>账号主页与内容矩阵</b>
+                        <small>虚拟人物带货 / 抖音主页</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-03.jpg" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-03.jpg" alt="工作室账号主页" loading="lazy" />
+                      <span>03</span>
+                      <div>
+                        <b>工作室账号主页</b>
+                        <small>虚拟人物带货 / 内容展示</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-04.jpg" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-04.jpg" alt="单条作品数据表现" loading="lazy" />
+                      <span>04</span>
+                      <div>
+                        <b>单条作品数据表现</b>
+                        <small>虚拟人物带货 / 数据截图</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-05.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-05.png" alt="黑色蕾丝裙商品图" loading="lazy" />
+                      <span>05</span>
+                      <div>
+                        <b>黑色蕾丝裙商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-06.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-06.png" alt="紫色纱裙商品图" loading="lazy" />
+                      <span>06</span>
+                      <div>
+                        <b>紫色纱裙商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-07.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-07.png" alt="黑色修身裙商品图" loading="lazy" />
+                      <span>07</span>
+                      <div>
+                        <b>黑色修身裙商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-08.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-08.png" alt="绿色旗袍商品图" loading="lazy" />
+                      <span>08</span>
+                      <div>
+                        <b>绿色旗袍商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-09.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-09.png" alt="碎花长裙商品图" loading="lazy" />
+                      <span>09</span>
+                      <div>
+                        <b>碎花长裙商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-10.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-10.png" alt="粉色连衣裙商品图" loading="lazy" />
+                      <span>10</span>
+                      <div>
+                        <b>粉色连衣裙商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-11.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/virtual-commerce-11.png" alt="复古花裙商品图" loading="lazy" />
+                      <span>11</span>
+                      <div>
+                        <b>复古花裙商品图</b>
+                        <small>商品展示 / 虚拟模特</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-video-01-preview.mp4" target="_blank" rel="noreferrer">
+                      <div class="project-file-thumb project-video-thumb" aria-hidden="true"></div>
+                      <span>12</span>
+                      <div>
+                        <b>虚拟人物带货视频 01</b>
+                        <small>短视频带货 / 视频素材</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-video-02-preview.mp4" target="_blank" rel="noreferrer">
+                      <div class="project-file-thumb project-video-thumb" aria-hidden="true"></div>
+                      <span>13</span>
+                      <div>
+                        <b>虚拟人物带货视频 02</b>
+                        <small>短视频带货 / 视频素材</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-video-03-preview.mp4" target="_blank" rel="noreferrer">
+                      <div class="project-file-thumb project-video-thumb" aria-hidden="true"></div>
+                      <span>14</span>
+                      <div>
+                        <b>虚拟人物带货视频 03</b>
+                        <small>短视频带货 / 视频素材</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/virtual-commerce-video-04-preview.mp4" target="_blank" rel="noreferrer">
+                      <div class="project-file-thumb project-video-thumb" aria-hidden="true"></div>
+                      <span>15</span>
+                      <div>
+                        <b>虚拟人物带货视频 04</b>
+                        <small>短视频带货 / 视频素材</small>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-copy"><span>VIRTUAL HUMAN</span><h3>AI虚拟人物带货内容</h3><p class="meta">短视频带货 / AI虚拟人 / 内容运营</p><p>参与虚拟人物形象、内容风格、短视频脚本与产品展示设计，理解虚拟人内容在电商转化场景中的表达逻辑。</p><a href="#contact">继续了解</a></div>
+          </div></div>
+          <div class="border-glow-card site-border-glow project-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner project-card">
+            <div class="project-visual violet has-media">
+              <div class="project-media-browser">
+                <div class="project-media-frame">
+                  <img class="project-image" src="./public/storyboard-character.png" alt="人物角色三视图" />
+                  <span>人物角色三视图</span>
+                </div>
+                <div class="project-file-shelf" aria-label="作品栏">
+                  <button class="project-shelf-toggle" type="button">
+                    <strong>作品栏</strong>
+                    <span>23 个文件</span>
+                    <b>展开</b>
+                  </button>
+                  <div class="project-file-list is-gallery" hidden>
+                    <a class="project-file-item is-image" href="./public/storyboard-character.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-character.png" alt="人物角色三视图" loading="lazy" />
+                      <span>01</span>
+                      <div>
+                        <b>人物角色三视图</b>
+                        <small>角色设定 / 人物造型</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-enemy.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-enemy.png" alt="敌军设定" loading="lazy" />
+                      <span>02</span>
+                      <div>
+                        <b>敌军设定</b>
+                        <small>角色设定 / 敌方阵营</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-environment.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-environment.png" alt="环境氛围设定" loading="lazy" />
+                      <span>03</span>
+                      <div>
+                        <b>环境氛围设定</b>
+                        <small>场景设计 / 世界观氛围</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-milo.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-milo.png" alt="Milo角色设定" loading="lazy" />
+                      <span>04</span>
+                      <div>
+                        <b>Milo角色设定</b>
+                        <small>角色设定 / 交叉路口</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-ivy.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-ivy.png" alt="Ivy角色设定" loading="lazy" />
+                      <span>05</span>
+                      <div>
+                        <b>Ivy角色设定</b>
+                        <small>角色设定 / 交叉路口</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-elias.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-elias.png" alt="Elias Vaughn角色设定" loading="lazy" />
+                      <span>06</span>
+                      <div>
+                        <b>Elias Vaughn角色设定</b>
+                        <small>角色设定 / 交叉路口</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-wayang-senapati.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-wayang-senapati.png" alt="Wayang Senapati角色设定" loading="lazy" />
+                      <span>07</span>
+                      <div>
+                        <b>Wayang Senapati角色设定</b>
+                        <small>角色设定 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-shen-yan.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-shen-yan.png" alt="沈砚角色设定" loading="lazy" />
+                      <span>08</span>
+                      <div>
+                        <b>沈砚角色设定</b>
+                        <small>角色设定 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-01.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-01.png" alt="皮影控制分镜 01" loading="lazy" />
+                      <span>09</span>
+                      <div>
+                        <b>皮影控制分镜 01</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-02.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-02.png" alt="皮影对话分镜 02" loading="lazy" />
+                      <span>10</span>
+                      <div>
+                        <b>皮影对话分镜 02</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-03.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-03.png" alt="皮影操控分镜 03" loading="lazy" />
+                      <span>11</span>
+                      <div>
+                        <b>皮影操控分镜 03</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-04.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-04.png" alt="厉鬼登场分镜 04" loading="lazy" />
+                      <span>12</span>
+                      <div>
+                        <b>厉鬼登场分镜 04</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-05.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-05.png" alt="戏台静场分镜 05" loading="lazy" />
+                      <span>13</span>
+                      <div>
+                        <b>戏台静场分镜 05</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-06.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-06.png" alt="废墟追逃分镜 06" loading="lazy" />
+                      <span>14</span>
+                      <div>
+                        <b>废墟追逃分镜 06</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-07.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-07.png" alt="醒转爬行分镜 07" loading="lazy" />
+                      <span>15</span>
+                      <div>
+                        <b>醒转爬行分镜 07</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-piying-seq-08.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-piying-seq-08.png" alt="木偶复苏特写 08" loading="lazy" />
+                      <span>16</span>
+                      <div>
+                        <b>木偶复苏特写 08</b>
+                        <small>分镜叙事 / 皮影判官</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-energy-warrior-purple.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-energy-warrior-purple.png" alt="紫色能量女战士设定" loading="lazy" />
+                      <span>17</span>
+                      <div>
+                        <b>紫色能量女战士设定</b>
+                        <small>角色设定 / 能量战士</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-shadow-swordswoman.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-shadow-swordswoman.png" alt="暗影剑士角色设定" loading="lazy" />
+                      <span>18</span>
+                      <div>
+                        <b>暗影剑士角色设定</b>
+                        <small>角色设定 / 暗影剑士</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-purple-energy-body.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-purple-energy-body.png" alt="紫色半透明能量体" loading="lazy" />
+                      <span>19</span>
+                      <div>
+                        <b>紫色半透明能量体</b>
+                        <small>角色三视图 / 能量体</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-cyber-scene-01.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-cyber-scene-01.png" alt="赛博城市屋顶场景" loading="lazy" />
+                      <span>20</span>
+                      <div>
+                        <b>赛博城市屋顶场景</b>
+                        <small>场景设计 / 赛博城市</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-cyber-scene-02.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-cyber-scene-02.png" alt="废墟室内场景" loading="lazy" />
+                      <span>21</span>
+                      <div>
+                        <b>废墟室内场景</b>
+                        <small>场景设计 / 赛博废墟</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-cyber-scene-03.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-cyber-scene-03.png" alt="紫色光柱城市场景" loading="lazy" />
+                      <span>22</span>
+                      <div>
+                        <b>紫色光柱城市场景</b>
+                        <small>场景设计 / 能量爆发</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/storyboard-purple-energy-visual.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/storyboard-purple-energy-visual.png" alt="紫色能量视觉图" loading="lazy" />
+                      <span>23</span>
+                      <div>
+                        <b>紫色能量视觉图</b>
+                        <small>视觉氛围 / 能量角色</small>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-copy"><span>STORYBOARD</span><h3>角色设定与分镜叙事</h3><p class="meta">角色视觉 / 场景氛围 / 镜头节奏</p><p>从角色形象、服装、场景风格到镜头情绪变化进行视觉规划，强调故事、角色、画面和传播效果的统一。</p><a href="#contact">继续了解</a></div>
+          </div></div>
+          <div class="border-glow-card site-border-glow project-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner project-card">
+            <div class="project-visual slate has-media">
+              <div class="project-media-browser">
+                <div class="project-media-frame">
+                  <img class="project-image" src="./public/campus-delivery-01.png" alt="仓鼠外卖项目标识" />
+                  <span>仓鼠外卖项目标识</span>
+                </div>
+                <div class="project-file-shelf" aria-label="作品栏">
+                  <button class="project-shelf-toggle" type="button">
+                    <strong>作品栏</strong>
+                    <span>6 个文件</span>
+                    <b>展开</b>
+                  </button>
+                  <div class="project-file-list is-gallery" hidden>
+                    <a class="project-file-item is-image" href="./public/campus-delivery-01.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/campus-delivery-01.png" alt="仓鼠外卖项目标识" loading="lazy" />
+                      <span>01</span>
+                      <div>
+                        <b>仓鼠外卖项目标识</b>
+                        <small>校园配送 / 项目品牌</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/campus-delivery-02.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/campus-delivery-02.png" alt="校园配送社群矩阵" loading="lazy" />
+                      <span>02</span>
+                      <div>
+                        <b>校园配送社群矩阵</b>
+                        <small>校园配送 / 社群运营</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/campus-delivery-03.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/campus-delivery-03.png" alt="商家资源联系人" loading="lazy" />
+                      <span>03</span>
+                      <div>
+                        <b>商家资源联系人</b>
+                        <small>商家整合 / 沟通协作</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/campus-delivery-04.jpg" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/campus-delivery-04.jpg" alt="商家通讯录截图" loading="lazy" />
+                      <span>04</span>
+                      <div>
+                        <b>商家通讯录截图</b>
+                        <small>商家资源 / 本地服务</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/campus-delivery-05.jpg" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/campus-delivery-05.jpg" alt="校园配送小程序页面" loading="lazy" />
+                      <span>05</span>
+                      <div>
+                        <b>校园配送小程序页面</b>
+                        <small>校园配送 / 平台页面</small>
+                      </div>
+                    </a>
+                    <a class="project-file-item is-image" href="./public/campus-delivery-06.png" target="_blank" rel="noreferrer">
+                      <img class="project-file-thumb" src="./public/campus-delivery-06.png" alt="配送群运营通知" loading="lazy" />
+                      <span>06</span>
+                      <div>
+                        <b>配送群运营通知</b>
+                        <small>校园配送 / 用户沟通</small>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-copy"><span>CAMPUS SERVICE</span><h3>校园配送创业项目</h3><p class="meta">大一期间 / 校园创业 / 本地生活服务 / 商家整合</p><p>参与校园外卖配送到寝室项目，通过软件平台整合校外商家，学生在线点单后由团队完成配送至宿舍。负责商家资源整合沟通、推动商家入驻、协助早期运营与用户需求反馈整理。</p><a href="#contact">继续了解</a></div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="strengths section-pad" id="strengths">
+      <div class="container">
+        <div class="section-head">
+          <div><div class="section-label">CAPABILITIES</div><h2>个人优势</h2></div>
+          <p>能力结构覆盖AI生成、视觉设计、短视频内容与早期项目执行。</p>
+        </div>
+        <div class="strength-grid">
+          <div class="border-glow-card site-border-glow strength-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner strength-card"><div class="icon">AI</div><h3>AI影像生产</h3><p>熟悉AI图像生成、角色设定、分镜设计与画面风格控制，能完成从故事到短片画面的完整流程。</p></div></div>
+          <div class="border-glow-card site-border-glow strength-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner strength-card"><div class="icon">VI</div><h3>视觉与美术基础</h3><p>具备造型、构图、色彩、光影与视觉叙事能力，能进行角色视觉、场景氛围和视觉包装设计。</p></div></div>
+          <div class="border-glow-card site-border-glow strength-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner strength-card"><div class="icon">OP</div><h3>内容与转化意识</h3><p>有抖音内容发布和AI虚拟人带货经验，理解短视频平台、人设表达和商业转化之间的关系。</p></div></div>
+          <div class="border-glow-card site-border-glow strength-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner strength-card"><div class="icon">01</div><h3>从0到1执行</h3><p>独立完成AI漫剧作品，也参与过校园创业项目，具备沟通协作、资源整合和项目推进能力。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact section-screen" id="contact">
+      <div class="container contact-inner">
+        <div>
+          <div class="section-label">CONTACT</div>
+          <h2>期待参与AI影像、品牌视觉与虚拟人内容项目。</h2>
+          <p>可沟通方向：AI影像实习生、AI短剧/AI漫剧创作、分镜设计助理、新媒体内容创作、虚拟人内容运营。</p>
+        </div>
+        <div class="border-glow-card site-border-glow contact-glow"><span class="edge-light" aria-hidden="true"></span><div class="border-glow-inner contact-panel">
+          <a href="tel:13318993217"><span>13318993217</span></a>
+          <a href="#projects"><span>查看AI漫剧 / 视觉项目</span></a>
+        </div></div>
+      </div>
+    </section>
+    <script>
+      document.querySelectorAll('.border-glow-card').forEach((card) => {
+        const updateGlow = (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI) + 90;
+          const edgeDistance = Math.min(x, y, rect.width - x, rect.height - y);
+          const maxDistance = Math.min(rect.width, rect.height) / 2;
+          const proximity = Math.max(0, Math.min(100, 100 - (edgeDistance / maxDistance) * 100));
+
+          card.style.setProperty('--cursor-angle', `${angle}deg`);
+          card.style.setProperty('--edge-proximity', proximity.toFixed(2));
+        };
+
+        card.addEventListener('pointermove', updateGlow);
+        card.addEventListener('pointerleave', () => {
+          card.style.setProperty('--edge-proximity', '0');
+        });
+      });
+      document.querySelectorAll('.project-file-shelf').forEach((shelf) => {
+        const button = shelf.querySelector('.project-shelf-toggle');
+        const list = shelf.querySelector('.project-file-list');
+        const stateLabel = button.querySelector('b');
+        button.addEventListener('click', () => {
+          const open = !shelf.classList.contains('is-open');
+          shelf.classList.toggle('is-open', open);
+          list.hidden = !open;
+          stateLabel.textContent = open ? '收起' : '展开';
+        });
+      });
+    </script>
+  </body>
+</html>
