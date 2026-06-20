@@ -19,6 +19,20 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -220,6 +234,10 @@ a {
   font-family: Inter, "PingFang SC", sans-serif;
   font-size: 12px;
   font-weight: 600;
+}
+
+.mobile-menu-toggle {
+  display: none;
 }
 
 .nav nav a:hover {
@@ -2002,5 +2020,467 @@ a {
 
   .stats {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  html,
+  body,
+  #root {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    min-width: 0;
+  }
+
+  main,
+  section {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .container {
+    width: calc(100% - 32px);
+    max-width: 100%;
+  }
+
+  .section-pad {
+    padding: 76px 0;
+  }
+
+  .nav,
+  .nav-scrolled {
+    top: 12px;
+    left: 12px;
+    width: calc(100% - 24px);
+    height: auto;
+    min-height: 48px;
+    padding: 6px 8px;
+    transform: none;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 18px;
+    background: rgba(245, 247, 246, 0.72);
+    backdrop-filter: blur(22px) saturate(1.25);
+    -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand span {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+  }
+
+  .brand strong {
+    overflow: hidden;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nav-contact {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid rgba(10, 13, 12, 0.16);
+    border-radius: 999px;
+    color: rgba(10, 13, 12, 0.86);
+    background: rgba(255, 255, 255, 0.58);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .nav .nav-links {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    display: none;
+    width: 100%;
+    padding: 10px;
+    gap: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 16px;
+    background: rgba(245, 247, 246, 0.9);
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
+    box-shadow: 0 18px 44px rgba(20, 24, 22, 0.16);
+  }
+
+  .nav .nav-links.is-open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav .nav-links a {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  .hero {
+    min-height: 100svh;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-video {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    transform: none;
+  }
+
+  .hero-stage {
+    min-height: 100svh;
+    padding: 82px 0 24px;
+    place-items: stretch;
+  }
+
+  .hero-panel {
+    width: 100%;
+    min-height: calc(100svh - 106px);
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    align-items: start;
+    padding: 28px 18px 22px;
+    border-radius: 20px;
+  }
+
+  .hero-copy,
+  .hero-index {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: 100%;
+    transform: none;
+  }
+
+  .hero-copy {
+    align-self: auto;
+    padding: 22px 18px 24px;
+    border-radius: 18px;
+  }
+
+  .hero h1 {
+    width: 100%;
+    max-width: 100%;
+    margin: 14px 0;
+    font-size: clamp(34px, 9.6vw, 46px);
+    line-height: 1.02;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .hero p {
+    width: 100%;
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hero-actions a {
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
+  .hero-index {
+    min-height: 0;
+    margin-top: 14px;
+    padding: 22px 22px 22px 104px;
+    gap: 7px;
+    border-radius: 18px;
+  }
+
+  .hero-index::before {
+    left: 24px;
+  }
+
+  .hero-index::after {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .hero-title {
+    left: 18px;
+    right: 18px;
+    top: 46%;
+    width: auto;
+    transform: none;
+    font-size: clamp(48px, 18vw, 76px);
+    overflow: hidden;
+  }
+
+  .hero-hud,
+  .hero-miniworks,
+  .hero-side {
+    display: none;
+  }
+
+  .mesh {
+    width: 100vw;
+    height: 100vw;
+  }
+
+  .about-grid,
+  .about-copy,
+  .project-card,
+  .contact-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-grid {
+    gap: 32px;
+    min-height: 0;
+  }
+
+  .about-grid > .about-border-glow,
+  .portrait-card {
+    width: 100%;
+    max-width: 100%;
+    justify-self: stretch;
+  }
+
+  .portrait {
+    height: min(112vw, 470px);
+  }
+
+  .portrait-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .about-copy {
+    display: block;
+  }
+
+  .about-copy h2,
+  .section-head h2,
+  .contact h2 {
+    max-width: 100%;
+    margin: 12px 0 20px;
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+
+  .about-copy > p,
+  .section-head p,
+  .project-copy p,
+  .strength-card p,
+  .contact p {
+    width: 100%;
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .contact-strip {
+    margin: 24px 0 0;
+  }
+
+  .contact-strip span {
+    max-width: 100%;
+  }
+
+  .profile-notes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .profile-notes article,
+  .profile-note-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .profile-notes span,
+  .profile-note-card span {
+    margin-bottom: 12px;
+  }
+
+  .profile-notes strong,
+  .profile-note-card strong {
+    font-size: 20px;
+    overflow-wrap: anywhere;
+  }
+
+  .about-border-glow-stats {
+    width: 100%;
+    margin-top: 28px;
+  }
+
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stat {
+    min-height: 0;
+    padding: 22px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .stat:last-child {
+    border-bottom: 0;
+  }
+
+  .stat strong {
+    font-size: 40px;
+  }
+
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .project-card {
+    min-height: 0;
+  }
+
+  .project-visual,
+  .project-media-browser {
+    min-height: 0;
+  }
+
+  .project-visual.has-media {
+    padding: 12px;
+  }
+
+  .project-media-browser {
+    grid-template-rows: auto auto;
+  }
+
+  .project-media-frame {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .project-file-shelf {
+    padding: 10px;
+  }
+
+  .project-shelf-toggle {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+  }
+
+  .project-file-list,
+  .project-file-list.is-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: min(62vh, 520px);
+  }
+
+  .project-copy {
+    padding: 28px 20px 32px;
+  }
+
+  .project-copy h3 {
+    margin: 12px 0 10px;
+    font-size: 28px;
+    overflow-wrap: anywhere;
+  }
+
+  .strength-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .strength-card {
+    min-height: 0;
+    padding: 26px 22px;
+  }
+
+  .strength-card .icon {
+    margin-bottom: 22px;
+  }
+
+  .contact {
+    min-height: 100svh;
+    padding: 88px 0 56px;
+  }
+
+  .contact-inner {
+    gap: 28px;
+  }
+
+  .contact-panel {
+    padding: 14px;
+  }
+
+  .contact-panel a {
+    min-width: 0;
+    min-height: 64px;
+    padding: 12px 14px;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+
+  .work-preview {
+    padding: 12px;
+  }
+
+  .work-preview-panel {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92svh;
+    border-radius: 16px;
+  }
+
+  .work-preview-head {
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .work-preview-head > div {
+    min-width: 0;
+  }
+
+  .work-preview-head strong,
+  .work-preview-head span {
+    overflow-wrap: anywhere;
+  }
+
+  .work-preview-stage {
+    padding: 10px;
+  }
+
+  .border-glow-card {
+    --glow-padding: 16px;
+    min-width: 0;
+    max-width: 100%;
   }
 }

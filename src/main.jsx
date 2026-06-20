@@ -8,6 +8,7 @@ import {
   Film,
   Mail,
   MapPin,
+  Menu,
   MessageCircle,
   Palette,
   Phone,
@@ -404,6 +405,7 @@ function MotionBackdrop() {
 
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -428,11 +430,21 @@ function Nav() {
         <span>LT</span>
         <strong>廖廷晖</strong>
       </a>
-      <nav>
-        <a href="#about">Profile</a>
-        <a href="#projects">Works</a>
-        <a href="#strengths">Ability</a>
-        <a href="#contact">Contact</a>
+      <button
+        className="mobile-menu-toggle"
+        type="button"
+        aria-expanded={menuOpen}
+        aria-controls="portfolio-navigation"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        <Menu size={17} />
+        <span>Menu</span>
+      </button>
+      <nav id="portfolio-navigation" className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
+        <a href="#about" onClick={() => setMenuOpen(false)}>Profile</a>
+        <a href="#projects" onClick={() => setMenuOpen(false)}>Works</a>
+        <a href="#strengths" onClick={() => setMenuOpen(false)}>Ability</a>
+        <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
       </nav>
       <a className="nav-contact" href="tel:13318993217">
         <Phone size={17} />
