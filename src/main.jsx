@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowUpRight,
@@ -475,13 +475,27 @@ function Hero() {
   const [loadHeroVideo, setLoadHeroVideo] = useState(false);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoadHeroVideo(true), 450);
-    return () => window.clearTimeout(timer);
+    if (window.matchMedia('(max-width: 768px)').matches) return undefined;
+
+    let timerId;
+    let idleId;
+    const loadVideo = () => setLoadHeroVideo(true);
+
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(loadVideo, { timeout: 1600 });
+    } else {
+      timerId = window.setTimeout(loadVideo, 900);
+    }
+
+    return () => {
+      if (idleId) window.cancelIdleCallback(idleId);
+      if (timerId) window.clearTimeout(timerId);
+    };
   }, []);
 
   return (
     <section className="hero section-screen" id="top">
-      <video className="hero-video" src={loadHeroVideo ? '/hero-bg-preview.mp4' : undefined} autoPlay muted loop playsInline preload="none" aria-hidden="true" />
+      <video className="hero-video" src={loadHeroVideo ? '/hero-bg-preview.mp4' : undefined} poster="/hero-poster.webp" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
       <MotionBackdrop />
       <Nav />
       <div className="hero-stage container">
@@ -552,7 +566,7 @@ function About() {
       <div className="container about-grid">
         <BorderGlow className="about-border-glow" innerClassName="portrait-card">
           <div className="portrait">
-            <img src="/portrait.jpg" alt="廖廷晖个人肖像" />
+            <img src="/portrait.webp" alt="廖廷晖个人肖像" loading="lazy" decoding="async" />
             <div className="portrait-glow" />
           </div>
           <div className="portrait-meta">
@@ -597,11 +611,30 @@ function About() {
   );
 }
 
+const getVideoPoster = (src) => src.replace(/-preview\.mp4$/, '-poster.webp');
+const getOptimizedImage = (src) => src.replace(/\.(png|jpe?g)$/i, '.webp');
+
 function ProjectVisual({ accent, mediaItems }) {
   const featuredMedia = mediaItems?.[0];
   const [shelfOpen, setShelfOpen] = useState(false);
   const [previewItem, setPreviewItem] = useState(null);
+  const [mediaReady, setMediaReady] = useState(false);
+  const visualRef = useRef(null);
   const hasVisualGallery = mediaItems?.some((item) => item.type === 'image');
+
+  useEffect(() => {
+    const visual = visualRef.current;
+    if (!visual || !featuredMedia || featuredMedia.type !== 'video') return undefined;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setMediaReady(true);
+      observer.disconnect();
+    }, { rootMargin: '280px 0px' });
+
+    observer.observe(visual);
+    return () => observer.disconnect();
+  }, [featuredMedia]);
 
   useEffect(() => {
     if (!previewItem) return undefined;
@@ -619,14 +652,22 @@ function ProjectVisual({ accent, mediaItems }) {
   }, [previewItem]);
 
   return (
-    <div className={`project-visual ${accent} ${featuredMedia ? 'has-media' : ''}`}>
+    <div ref={visualRef} className={`project-visual ${accent} ${featuredMedia ? 'has-media' : ''}`}>
       {featuredMedia ? (
         <div className="project-media-browser">
           <div className="project-media-frame">
             {featuredMedia.type === 'video' ? (
-              <video className="project-video" src={featuredMedia.src} controls muted playsInline preload="none" />
+              <video
+                className="project-video"
+                src={mediaReady ? featuredMedia.src : undefined}
+                poster={mediaReady ? getVideoPoster(featuredMedia.src) : undefined}
+                controls
+                muted
+                playsInline
+                preload="none"
+              />
             ) : (
-              <img className="project-image" src={featuredMedia.src} alt={featuredMedia.label} loading="lazy" decoding="async" />
+              <img className="project-image" src={getOptimizedImage(featuredMedia.src)} alt={featuredMedia.label} loading="lazy" decoding="async" />
             )}
             <span>{featuredMedia.label}</span>
           </div>
@@ -645,7 +686,7 @@ function ProjectVisual({ accent, mediaItems }) {
                   onClick={() => setPreviewItem(item)}
                 >
                   {item.type === 'image' && (
-                    <img className="project-file-thumb" src={item.src} alt={item.label} loading="lazy" />
+                    <img className="project-file-thumb" src={getOptimizedImage(item.src)} alt={item.label} loading="lazy" decoding="async" />
                   )}
                   {hasVisualGallery && item.type === 'video' && (
                     <div className="project-file-thumb project-video-thumb" aria-hidden="true">
@@ -676,9 +717,9 @@ function ProjectVisual({ accent, mediaItems }) {
                 </div>
                 <div className="work-preview-stage">
                   {previewItem.type === 'video' ? (
-                    <video src={previewItem.src} controls autoPlay playsInline />
+                    <video src={previewItem.src} poster={getVideoPoster(previewItem.src)} controls autoPlay playsInline preload="metadata" />
                   ) : (
-                    <img src={previewItem.src} alt={previewItem.label} />
+                    <img src={getOptimizedImage(previewItem.src)} alt={previewItem.label} decoding="async" />
                   )}
                 </div>
               </div>

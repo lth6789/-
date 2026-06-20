@@ -20,6 +20,7 @@ const splitText = (element) => {
 export function initPortfolioAnimations() {
   if (typeof window === 'undefined') return () => {};
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
   const ctx = gsap.context(() => {
     gsap.set('.hero-panel', { clipPath: 'inset(12% 12% 12% 12% round 34px)' });
@@ -87,19 +88,21 @@ export function initPortfolioAnimations() {
         .to(cards, { autoAlpha: 1, y: 0, scale: 1, clipPath: 'inset(0% 0 0% 0 round 20px)', duration: 1.1, stagger: 0.11 }, '-=0.9');
     });
 
-    gsap.utils.toArray('.project-media-frame img, .project-media-frame video, .portrait img').forEach((item) => {
-      gsap.to(item, {
-        yPercent: -8,
-        scale: 1.05,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: item,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1.2,
-        },
+    if (!isMobile) {
+      gsap.utils.toArray('.project-media-frame img, .project-media-frame video, .portrait img').forEach((item) => {
+        gsap.to(item, {
+          yPercent: -8,
+          scale: 1.05,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
+          },
+        });
       });
-    });
+    }
   });
 
   ScrollTrigger.refresh();
