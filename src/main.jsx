@@ -566,7 +566,10 @@ function About() {
       <div className="container about-grid">
         <BorderGlow className="about-border-glow" innerClassName="portrait-card">
           <div className="portrait">
-            <img src="/portrait.webp" alt="廖廷晖个人肖像" loading="lazy" decoding="async" />
+            <picture>
+              <source srcSet="/portrait.webp" type="image/webp" />
+              <img src="/portrait.jpg" alt="廖廷晖个人肖像" loading="eager" fetchPriority="high" decoding="async" />
+            </picture>
             <div className="portrait-glow" />
           </div>
           <div className="portrait-meta">
