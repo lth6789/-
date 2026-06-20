@@ -615,6 +615,7 @@ function About() {
 }
 
 const getVideoPoster = (src) => src.replace(/-preview\.mp4$/, '-poster.webp');
+const getMobileVideo = (src) => src.replace(/-preview\.mp4$/, '-mobile.mp4');
 const getOptimizedImage = (src) => src.replace(/\.(png|jpe?g)$/i, '.webp');
 
 function ProjectVisual({ accent, mediaItems }) {
@@ -622,8 +623,10 @@ function ProjectVisual({ accent, mediaItems }) {
   const [shelfOpen, setShelfOpen] = useState(false);
   const [previewItem, setPreviewItem] = useState(null);
   const [mediaReady, setMediaReady] = useState(false);
+  const [isMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches);
   const visualRef = useRef(null);
   const hasVisualGallery = mediaItems?.some((item) => item.type === 'image');
+  const resolveVideoSource = (src) => (isMobile ? getMobileVideo(src) : src);
 
   useEffect(() => {
     const visual = visualRef.current;
@@ -661,14 +664,16 @@ function ProjectVisual({ accent, mediaItems }) {
           <div className="project-media-frame">
             {featuredMedia.type === 'video' ? (
               <video
+                key={mediaReady ? resolveVideoSource(featuredMedia.src) : 'poster-only'}
                 className="project-video"
-                src={mediaReady ? featuredMedia.src : undefined}
-                poster={mediaReady ? getVideoPoster(featuredMedia.src) : undefined}
+                poster={getVideoPoster(featuredMedia.src)}
                 controls
                 muted
                 playsInline
                 preload="none"
-              />
+              >
+                {mediaReady && <source src={resolveVideoSource(featuredMedia.src)} type="video/mp4" />}
+              </video>
             ) : (
               <img className="project-image" src={getOptimizedImage(featuredMedia.src)} alt={featuredMedia.label} loading="lazy" decoding="async" />
             )}
@@ -720,7 +725,9 @@ function ProjectVisual({ accent, mediaItems }) {
                 </div>
                 <div className="work-preview-stage">
                   {previewItem.type === 'video' ? (
-                    <video src={previewItem.src} poster={getVideoPoster(previewItem.src)} controls autoPlay playsInline preload="metadata" />
+                    <video poster={getVideoPoster(previewItem.src)} controls autoPlay playsInline preload="metadata">
+                      <source src={resolveVideoSource(previewItem.src)} type="video/mp4" />
+                    </video>
                   ) : (
                     <img src={getOptimizedImage(previewItem.src)} alt={previewItem.label} decoding="async" />
                   )}
