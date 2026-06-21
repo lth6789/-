@@ -473,15 +473,17 @@ function HeroFigure() {
 
 function Hero() {
   const [loadHeroVideo, setLoadHeroVideo] = useState(false);
+  const [isMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches);
+  const heroVideoRef = useRef(null);
 
   useEffect(() => {
-    if (window.matchMedia('(max-width: 768px)').matches) return undefined;
-
     let timerId;
     let idleId;
     const loadVideo = () => setLoadHeroVideo(true);
 
-    if ('requestIdleCallback' in window) {
+    if (isMobile) {
+      timerId = window.setTimeout(loadVideo, 120);
+    } else if ('requestIdleCallback' in window) {
       idleId = window.requestIdleCallback(loadVideo, { timeout: 1600 });
     } else {
       timerId = window.setTimeout(loadVideo, 900);
@@ -491,11 +493,38 @@ function Hero() {
       if (idleId) window.cancelIdleCallback(idleId);
       if (timerId) window.clearTimeout(timerId);
     };
-  }, []);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!loadHeroVideo) return undefined;
+
+    const video = heroVideoRef.current;
+    if (!video) return undefined;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', 'true');
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('x5-playsinline', 'true');
+
+    const tryPlay = () => video.play().catch(() => {});
+    video.load();
+    tryPlay();
+    video.addEventListener('canplay', tryPlay, { once: true });
+    document.addEventListener('WeixinJSBridgeReady', tryPlay, { once: true });
+
+    return () => {
+      video.removeEventListener('canplay', tryPlay);
+      document.removeEventListener('WeixinJSBridgeReady', tryPlay);
+    };
+  }, [loadHeroVideo]);
 
   return (
     <section className="hero section-screen" id="top">
-      <video className="hero-video" src={loadHeroVideo ? '/hero-bg-preview.mp4' : undefined} poster="/hero-poster.webp" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
+      <video ref={heroVideoRef} className="hero-video" poster="/hero-poster.webp" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
+        {loadHeroVideo && <source src={isMobile ? '/hero-bg-mobile.mp4' : '/hero-bg-preview.mp4'} type="video/mp4" />}
+      </video>
       <MotionBackdrop />
       <Nav />
       <div className="hero-stage container">
