@@ -38,6 +38,12 @@ const projects = [
       },
       {
         type: 'video',
+        src: '/ai-short-film-sword-too-heavy-preview.mp4',
+        label: '少年，剑太重',
+        note: 'AI动画短片 / 视频作品',
+      },
+      {
+        type: 'video',
         src: '/ai-short-film-featured-preview.mp4',
         label: '人物脸部特写',
         note: 'AI动画短片 / 视频文件',

@@ -8,6 +8,7 @@ const publicDir = join(process.cwd(), 'public');
 const jobs = [
   ['hero-bg.mp4', 'hero-bg-preview.mp4', true],
   ['ai-short-film-red-blue-warrior.mp4', 'ai-short-film-red-blue-warrior-preview.mp4', false],
+  ['ai-short-film-sword-too-heavy.mp4', 'ai-short-film-sword-too-heavy-preview.mp4', false],
   ['ai-short-film-featured.mp4', 'ai-short-film-featured-preview.mp4', false],
   ['ai-short-film.mp4', 'ai-short-film-preview.mp4', false],
   ['ai-short-film-02.mp4', 'ai-short-film-02-preview.mp4', false],
