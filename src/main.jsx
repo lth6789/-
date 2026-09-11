@@ -50,27 +50,9 @@ const projects = [
       },
       {
         type: 'video',
-        src: '/ai-short-film-preview.mp4',
-        label: '皮影判官',
-        note: 'AI动画短片 / 视频文件',
-      },
-      {
-        type: 'video',
         src: '/ai-short-film-02-preview.mp4',
         label: '战斗场面练习',
         note: 'AI动画短片 / 动作场面练习',
-      },
-      {
-        type: 'video',
-        src: '/ai-short-film-04-preview.mp4',
-        label: '从屈辱到崛起',
-        note: 'AI动画短片 / 视频文件',
-      },
-      {
-        type: 'video',
-        src: '/ai-short-film-05-preview.mp4',
-        label: '交叉路口',
-        note: 'AI动画短片 / 视频文件',
       },
     ],
   },
@@ -369,29 +351,29 @@ const projects = [
 
 const strengths = [
   {
-    icon: <WandSparkles size={24} />,
-    title: 'AI影像生产',
-    text: '熟悉AI图像生成、角色设定、分镜设计与画面风格控制，能完成从故事到短片画面的完整流程。',
-  },
-  {
     icon: <Palette size={24} />,
-    title: '视觉与美术基础',
-    text: '具备造型、构图、色彩、光影与视觉叙事能力，能进行角色视觉、场景氛围和视觉包装设计。',
-  },
-  {
-    icon: <Target size={24} />,
-    title: '内容与转化意识',
-    text: '有抖音内容发布和AI虚拟人带货经验，理解短视频平台、人设表达和商业转化之间的关系。',
+    title: '美术审美与质量把控',
+    text: '以美术专业基础为底，将审美判断融入专属 Agent。严格审视每张资产图的构图、色彩、光影与细节，兼顾单张画面的完成度和整组资产的风格一致性。',
   },
   {
     icon: <BrainCircuit size={24} />,
-    title: '从0到1执行',
-    text: '独立完成AI漫剧作品，也参与过校园创业项目，具备沟通协作、资源整合和项目推进能力。',
+    title: '剧本拆解与导演协作',
+    text: '通过自建 Agent，将剧本拆解为角色、场景、资产与镜头任务。把导演意图转化为具体的画面要求，逐项落实视觉风格、画面构成与叙事情绪，在校核与迭代中保持创作方向一致。',
+  },
+  {
+    icon: <WandSparkles size={24} />,
+    title: '影视资产与视频制作',
+    text: '在河舟影视文化有限公司负责 AI 影视资产与视频制作，结合个人短片创作经验，衔接角色设定、分镜规划、画面生成与后期剪辑，关注从静态资产到动态镜头的视觉连贯与叙事节奏。',
+  },
+  {
+    icon: <Target size={24} />,
+    title: '内容实践与传播意识',
+    text: '持续创作并发布 AI 影像内容，抖音账号累计粉丝 2000+。结合 AI 虚拟人带货与内容运营经验，在视觉表达之外关注受众理解、人物辨识度与产品呈现，让创作贴合传播场景。',
   },
 ];
 
 const stats = [
-  ['1000+', '抖音账号累计粉丝'],
+  ['2000+', '抖音账号累计粉丝'],
   ['3', '核心项目经历'],
   ['2027', '三峡大学本科在读'],
 ];
@@ -449,6 +431,7 @@ function Nav() {
       <nav id="portfolio-navigation" className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
         <a href="#about" onClick={() => setMenuOpen(false)}>Profile</a>
         <a href="#projects" onClick={() => setMenuOpen(false)}>Works</a>
+        <a href="#experience" onClick={() => setMenuOpen(false)}>实习经历</a>
         <a href="#strengths" onClick={() => setMenuOpen(false)}>Ability</a>
         <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
       </nav>
@@ -575,7 +558,7 @@ function Hero() {
 
             <span className="index-label">Portfolio</span>
             <a href="#strengths">2 AI short films</a>
-            <a href="#strengths">1000+ followers</a>
+            <a href="#strengths">2000+ followers</a>
           </aside>
 
           <div className="hero-miniworks">
@@ -619,12 +602,13 @@ function About() {
             我具备美术专业背景，关注造型、构图、色彩与视觉叙事，也持续实践AI影像、AI漫剧与虚拟人物内容。相比单纯完成画面，我更关注故事、角色、画面和传播效果如何共同成立。
           </p>
           <p>
-            目前希望进入AI内容、动画影像、新媒体视觉或虚拟人相关团队，参与AI短剧、AI广告、角色视觉、分镜设计、内容运营等真实项目。
+            在河舟影视文化有限公司担任 AI 美术师，负责 AI 影视资产与视频制作，并搭建个人专属的影视制作 Agent，持续将创作经验沉淀为可复用的制作方法。
           </p>
           <div className="contact-strip">
             <span><Phone size={16} /> 13318993217</span>
             <span><MapPin size={16} /> 湖北 / 三峡大学</span>
           </div>
+          <Experience />
           <BorderGlow className="about-border-glow about-border-glow-stats" innerClassName="stats">
             {stats.map(([num, label]) => (
               <div className="stat" key={label}>
@@ -824,6 +808,49 @@ function Projects() {
   );
 }
 
+function Experience() {
+  return (
+    <div className="experience" id="experience" role="region" aria-labelledby="experience-title">
+        <div className="experience-heading">
+          <h3 id="experience-title">实习经历</h3>
+          <span>AI 影视资产 · 视频制作 · 专属 Agent</span>
+        </div>
+        <article className="experience-entry" aria-labelledby="experience-company">
+          <header className="experience-company">
+            <span className="experience-period">6月至9月 · 实习</span>
+            <h4 id="experience-company">河舟影视文化有限公司</h4>
+            <p className="experience-role">AI 美术师</p>
+          </header>
+          <div className="experience-detail">
+            <p className="experience-intro">负责 AI 影视资产与视频制作，将美术判断融入 AI 生成过程，关注视觉表达与项目需求的契合，让资产与镜头更好地服务于故事。</p>
+            <dl className="experience-responsibilities">
+              <div>
+                <dt><Palette size={20} aria-hidden="true" />影视资产制作</dt>
+                <dd>围绕项目需求开展 AI 视觉资产制作与调整，注重画面风格、细节表现与资产之间的视觉一致性。</dd>
+              </div>
+              <div>
+                <dt><Film size={20} aria-hidden="true" />AI 视频制作</dt>
+                <dd>参与从静态资产到动态影像的制作，结合镜头表达与叙事节奏持续打磨画面，配合项目推进内容迭代。</dd>
+              </div>
+              <div>
+                <dt><BrainCircuit size={20} aria-hidden="true" />专属 Agent</dt>
+                <dd>专属 Agent 以较高的审美标准严格把控每一张资产图的质量，逐项审视构图、色彩、光影、细节与风格一致性。同时具备剧本拆解能力，可将剧情转化为角色、场景、资产与镜头任务，并依据导演要求逐项落实画面构成、视觉风格与叙事情绪，通过校核与迭代严格对齐导演的画面要求。</dd>
+              </div>
+            </dl>
+            <div className="experience-projects">
+              <div className="experience-projects-heading">
+                <h4>参考项目</h4>
+                <span>尚未上线</span>
+              </div>
+              <p>《赘婿儒生》 · 《一剑开天门》 · 《光之眼》</p>
+              <small>以上项目目前尚未上线，暂不展示相关制作素材。</small>
+            </div>
+          </div>
+        </article>
+    </div>
+  );
+}
+
 function Strengths() {
   return (
     <section className="strengths section-pad" id="strengths">
@@ -833,7 +860,7 @@ function Strengths() {
             <div className="section-label">CAPABILITIES</div>
             <h2>个人优势</h2>
           </div>
-          <p>能力结构覆盖AI生成、视觉设计、短视频内容与早期项目执行。</p>
+          <p>以美术审美把控质量，以专属 Agent 落实导演意图，将影视制作经验与内容传播意识融入创作。</p>
         </div>
         <div className="strength-grid">
           {strengths.map((item) => (

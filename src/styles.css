@@ -2008,6 +2008,170 @@ a {
   --border-radius: 24px;
 }
 
+.experience {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin-top: 36px;
+  padding: 28px 0 0;
+  color: #171d1b;
+  border-top: 3px solid #426b5b;
+  scroll-margin-top: 90px;
+}
+
+.experience-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  margin-bottom: 24px;
+}
+
+.experience-heading h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #254f3e;
+}
+
+.experience-heading > span {
+  color: #426b5b;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.experience-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.experience-company {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 24px;
+  align-items: center;
+}
+
+.experience-period {
+  grid-column: 1 / -1;
+  color: #426b5b;
+  font-size: 15px;
+}
+
+.experience-company h4 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.experience .experience-role {
+  margin: 0;
+  color: #254f3e;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.experience .experience-intro,
+.experience-responsibilities dd,
+.experience-projects p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.experience-responsibilities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 28px 0;
+}
+
+.experience-responsibilities > div {
+  padding: 20px 0;
+  border-top: 1px solid rgba(10, 13, 12, 0.12);
+}
+
+.experience-responsibilities dt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.experience-responsibilities dt svg {
+  flex-shrink: 0;
+  color: #426b5b;
+}
+
+.experience-responsibilities dd,
+.experience-projects small {
+  color: #54615b;
+}
+
+.experience-projects {
+  padding-left: 20px;
+  border-left: 2px solid #426b5b;
+}
+
+.experience-projects-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.experience-projects h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.experience-projects-heading span,
+.experience-projects small {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.experience-projects-heading span {
+  color: #795b26;
+}
+
+.experience-projects small {
+  display: block;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .experience-entry {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding-top: 0;
+  }
+
+  .experience-company {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .experience-company h4,
+  .experience .experience-role {
+    font-size: 22px;
+  }
+
+  .experience .experience-intro,
+  .experience-responsibilities dd,
+  .experience-projects p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .experience-responsibilities {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
 @media (max-width: 1280px) {
   body {
     min-width: 1024px;
